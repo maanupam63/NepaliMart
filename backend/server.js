@@ -10,20 +10,26 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://nepali-mart.vercel.app',
+  ],
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static folder for images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
-app.use('/api/payment', require('./routes/paymentRoutes'));   // ← YO ADD GARNUS
+app.use('/api/payment', require('./routes/paymentRoutes'));
 
 app.get('/', (req, res) => {
   res.json({ message: '🚀 Nepali Mart API chalirako cha!' });
